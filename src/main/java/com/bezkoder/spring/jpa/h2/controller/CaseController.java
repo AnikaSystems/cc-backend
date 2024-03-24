@@ -27,7 +27,7 @@ import com.bezkoder.spring.jpa.h2.repository.CaseRepository;
 public class CaseController {
 
   @Autowired
-  CaseRepository CaseRepository;
+  CaseRepository caseRepository;
 
   @GetMapping("/cases")
   public ResponseEntity<List<Case>> getAllCases(@RequestParam(required = false) String title) {
