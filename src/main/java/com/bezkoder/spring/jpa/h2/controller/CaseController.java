@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.bezkoder.spring.jpa.h2.model.Case;
 import com.bezkoder.spring.jpa.h2.repository.CaseRepository;
 
-@CrossOrigin(origins = "http://localhost:8081")
+@CrossOrigin(origins = "https://cc-case-management.s3.amazonaws.com")
 @RestController
 @RequestMapping("/api")
 public class CaseController {
