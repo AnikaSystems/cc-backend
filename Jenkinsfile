@@ -1,6 +1,6 @@
 pipeline {
     agent any
-    tools {docker "docker"}
+    tools {dockerTool "docker"}
     stages {
          stage('Clone repository') { 
             steps { 
@@ -9,12 +9,12 @@ pipeline {
                 }
             }
         }
-        stage('Initialize'){
-            steps {
-                def dockerHome = tool 'docker'
-                env.PATH = "${dockerHome}/bin:${env.PATH}"
-            }
-        }
+        // stage('Initialize'){
+        //     steps {
+        //         def dockerHome = tool 'docker'
+        //         env.PATH = "${dockerHome}/bin:${env.PATH}"
+        //     }
+        // }
         stage('Build') { 
             steps { 
                 script{
