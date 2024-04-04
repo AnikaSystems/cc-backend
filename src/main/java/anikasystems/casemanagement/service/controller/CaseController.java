@@ -1,4 +1,4 @@
-package com.bezkoder.spring.jpa.h2.controller;
+package com.anikasystems.casemanagement.service.controller;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,10 +18,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.bezkoder.spring.jpa.h2.model.Case;
-import com.bezkoder.spring.jpa.h2.repository.CaseRepository;
+import com.anikasystems.casemanagement.service.model.Case;
+import com.anikasystems.casemanagement.service.repository.CaseRepository;
 
-@CrossOrigin(origins = "https://cc-case-management.s3.amazonaws.com")
+@CrossOrigin(origins = "http://localhost:8081")
 @RestController
 @RequestMapping("/api")
 public class CaseController {
