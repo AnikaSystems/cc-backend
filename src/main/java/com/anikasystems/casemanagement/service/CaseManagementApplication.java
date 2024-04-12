@@ -1,13 +1,13 @@
-package com.bezkoder.spring.jpa.h2;
+package com.anikasystems.casemanagement.service;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class SpringBootJpaH2Application {
+public class CaseManagementApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(SpringBootJpaH2Application.class, args);
+		SpringApplication.run(CaseManagementApplication.class, args);
 	}
 
 }

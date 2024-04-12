@@ -1,4 +1,4 @@
-package com.bezkoder.spring.jpa.h2.model;
+package com.anikasystems.casemanagement.service.model;
 
 import jakarta.persistence.*;
 
