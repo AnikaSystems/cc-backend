@@ -22,7 +22,7 @@ import com.anikasystems.casemanagement.service.model.Case;
 import com.anikasystems.casemanagement.service.repository.CaseRepository;
 import com.anikasystems.casemanagement.service.jms.SimpleQueue;
 
-@CrossOrigin(origins = "http://localhost:8081")
+@CrossOrigin(origins = "https://cc-case-management.s3.amazonaws.com")
 @RestController
 @RequestMapping("/api")
 public class CaseController {
@@ -67,7 +67,7 @@ public class CaseController {
       Case _case = caseRepository.save(new Case(caseData.getTitle(), caseData.getDescription(), false));
 
       SimpleQueue queue = new SimpleQueue("cases");
-      queue.send(String.format("Case %s has been created successfully.", caseData.getTitle()));
+      queue.send(caseData.getTitle());
       queue.close();
 
       return new ResponseEntity<>(_case, HttpStatus.CREATED);
