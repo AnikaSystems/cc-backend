@@ -21,10 +21,10 @@ public class SimpleQueue {
 		// URL of the JMS server is required to create connection factory.
 		// DEFAULT_BROKER_URL is : tcp://localhost:61616 and is indicates that JMS
 		// server is running on localhost
-		connectionFactory = new ActiveMQConnectionFactory("tcp://localhost:61616");
+		connectionFactory = new ActiveMQConnectionFactory("ssl://b-61353410-db56-416e-9bc5-b775ccd80d45-1.mq.us-east-1.amazonaws.com:61617");
 		// Getting JMS connection from the server and starting it
-		connection = connectionFactory.createConnection("artemis", "artemis");
-		connection.setClientID(CLIENTID);
+		connection = connectionFactory.createConnection("admin", "admin1234567");
+		// connection.setClientID(CLIENTID);
 		connection.start();
 		// Creating a non-transactional session to send/receive JMS message.
 		session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
