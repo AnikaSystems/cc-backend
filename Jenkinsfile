@@ -1,6 +1,8 @@
 pipeline {
-    agent any
-    tools {dockerTool "docker"}
+    agent { label'ec2-agent' }
+    options {
+        skipStagesAfterUnstable()
+    }
     stages {
          stage('Clone repository') { 
             steps { 
@@ -9,35 +11,22 @@ pipeline {
                 }
             }
         }
-        // stage('Initialize'){
-        //     steps {
-        //         def dockerHome = tool 'docker'
-        //         env.PATH = "${dockerHome}/bin:${env.PATH}"
-        //     }
-        // }
         stage('Build') { 
             steps { 
                 script{
-                 docker.build("springboot-activemq")
-                 //sh './gradlew clean bootJar'
+                 app = docker.build("cc-backend:${env.BUILD_NUMBER}")
                 }
             }
         }
-        // stage('Test'){
-        //     steps {
-        //         // Run Gradle tests
-        //         sh './gradlew clean test --no-daemon'
-        //     }
-        // }
-        // stage('Deploy') {
-        //     steps {
-        //         script{
-        //                 docker.withRegistry('246534174064.dkr.ecr.us-east-1.amazonaws.com', 'ecr:us-east-1:aws-credentials') {
-        //             app.push("${env.BUILD_NUMBER}")
-        //             app.push("latest")
-        //             }
-        //         }
-        //     }
-        // }
+        stage('Deploy to ECR') {
+            steps {
+                script{
+                    docker.withRegistry('https://246534174064.dkr.ecr.us-east-1.amazonaws.com', "ecr:us-east-1:${env.PIPELINE_CREDENTIAL_NAME}") {
+                        app.push("${env.BUILD_NUMBER}")
+                        app.push("latest")
+                    }
+                }
+            }
+        }
     }
 }
