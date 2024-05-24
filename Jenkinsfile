@@ -21,7 +21,7 @@ pipeline {
         stage('Deploy to ECR') {
             steps {
                 script{
-                    docker.withRegistry('https://246534174064.dkr.ecr.us-east-1.amazonaws.com', "ecr:us-east-1:${env.PIPELINE_CREDENTIAL_NAME}") {
+                    docker.withRegistry('https://${env.ECR_FQDN}', "ecr:us-east-1:${env.PIPELINE_CREDENTIAL_NAME}") {
                         app.push("${env.BUILD_NUMBER}")
                         app.push("latest")
                     }
