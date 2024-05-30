@@ -11,6 +11,7 @@ pipeline {
                 }
             }
         }
+
         stage('Build') { 
             steps { 
                 script{
@@ -18,13 +19,46 @@ pipeline {
                 }
             }
         }
+
+        stage('Test (JUnit / Jacoco)'){
+            steps {
+                // Run Gradle tests
+                sh './gradlew clean test jacocoTestReport --no-daemon'
+            }
+            post {
+                always {
+                    junit 'build/test-results/**/*.xml'
+                }
+            }
+        }
+
+        stage('SonarQube analysis') {
+            steps {
+                script {
+                    withSonarQubeEnv() {
+                        sh './gradlew sonarqube'
+                    }
+                }
+            }
+        }
+
         stage('Deploy to ECR') {
             steps {
                 script{
-                    docker.withRegistry("https://${env.ECR_FQDN}", "ecr:us-east-1:${env.PIPELINE_CREDENTIAL_NAME}") {
+                    def BRANCH_NAME = scm.branches[0].name
+                    docker.withRegistry("https://${env.ECR_FQDN}", "ecr:${env.DEPLOY_REGION}:${env.PIPELINE_CREDENTIAL_NAME}") {
                         app.push("${env.BUILD_NUMBER}")
+                        app.push("${BRANCH_NAME}")
                         app.push("latest")
                     }
+                }
+            }
+        }
+
+        stage('Trivy Scan') {
+            steps {
+                script {
+                    echo "Run Trivy Scanner"
                 }
             }
         }
