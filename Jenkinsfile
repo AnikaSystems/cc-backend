@@ -55,7 +55,7 @@ pipeline {
             steps {
                 script {
                     echo "Run Trivy Scanner"
-                    sh 'docker run --rm -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy image cc-backend:${env.BUILD_NUMBER}'
+                    sh "docker run --rm -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy image cc-backend:${env.BUILD_NUMBER}"
                 }
             }
         }
