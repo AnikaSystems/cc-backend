@@ -42,7 +42,7 @@ pipeline {
             steps {
                 script{
                     def BRANCH_NAME = scm.branches[0].name
-                    docker.withRegistry("https://${env.ECR_FQDN}", "ecr:${env.DEPLOY_REGION}:${env.PIPELINE_CREDENTIAL_NAME}") {
+                    docker.withRegistry("https://${env.ECR_FQDN}", "ecr:${env.DEPLOY_REGION}:aws-rapid-jenkins-ecr-user") {
                         app.push("${env.BUILD_NUMBER}")
                         app.push("${BRANCH_NAME}")
                         app.push("latest")
