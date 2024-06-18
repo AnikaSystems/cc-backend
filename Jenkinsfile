@@ -38,6 +38,7 @@ pipeline {
             }
         }
 
+
         stage('Deploy to ECR') {
             steps {
                 script{
