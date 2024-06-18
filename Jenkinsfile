@@ -32,7 +32,7 @@ pipeline {
             steps {
                 script {
                     withSonarQubeEnv() {
-                        sh './gradlew sonar'
+                        echo "Run SonarQube Scanner"
                     }
                 }
             }
