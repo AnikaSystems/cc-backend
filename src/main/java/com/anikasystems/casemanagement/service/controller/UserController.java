@@ -18,93 +18,93 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.anikasystems.casemanagement.service.model.Case;
-import com.anikasystems.casemanagement.service.repository.CaseRepository;
+import com.anikasystems.casemanagement.service.model.User;
+import com.anikasystems.casemanagement.service.repository.UserRepository;
 import com.anikasystems.casemanagement.service.jms.SimpleQueue;
 
 @CrossOrigin(origins = "https://cc-case-management.s3.amazonaws.com")
 @RestController
 @RequestMapping("/api")
-public class CaseController {
+public class UserController {
 
   @Autowired
-  CaseRepository caseRepository;
+  UserRepository userRepository;
 
-  @GetMapping("/cases")
-  public ResponseEntity<List<Case>> getAllCases(@RequestParam(required = false) String title) {
+  @GetMapping("/users")
+  public ResponseEntity<List<User>> getAllUsers(@RequestParam(required = false) String lastname) {
     try {
-      List<Case> cases = new ArrayList<Case>();
+      List<User> users = new ArrayList<User>();
 
-      if (title == null)
-        caseRepository.findAll().forEach(cases::add);
+      if (lastname == null)
+        userRepository.findAll().forEach(users::add);
       else
-        caseRepository.findByTitleContainingIgnoreCase(title).forEach(cases::add);
+        userRepository.findByLastnameContainingIgnoreCase(lastname).forEach(users::add);
 
-      if (cases.isEmpty()) {
+      if (users.isEmpty()) {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
       }
 
-      return new ResponseEntity<>(cases, HttpStatus.OK);
+      return new ResponseEntity<>(users, HttpStatus.OK);
     } catch (Exception e) {
       return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
-  @GetMapping("/cases/{id}")
-  public ResponseEntity<Case> getCaseById(@PathVariable("id") long id) {
-    Optional<Case> caseData = caseRepository.findById(id);
+  @GetMapping("/users/{id}")
+  public ResponseEntity<User> getCaseById(@PathVariable("id") long id) {
+    Optional<User> userData = userRepository.findById(id);
 
-    if (caseData.isPresent()) {
-      return new ResponseEntity<>(caseData.get(), HttpStatus.OK);
+    if (userData.isPresent()) {
+      return new ResponseEntity<>(userData.get(), HttpStatus.OK);
     } else {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
   }
 
-  @PostMapping("/cases")
-  public ResponseEntity<Case> createCase(@RequestBody Case caseData) {
+  @PostMapping("/users")
+  public ResponseEntity<User> createCase(@RequestBody User userData) {
     try {
-      Case _case = caseRepository.save(new Case(caseData.getTitle(), caseData.getDescription(), false));
+      User _user = userRepository.save(new User(userData.getFirstname(), userData.getLastname(), false));
 
-      SimpleQueue queue = new SimpleQueue("cases");
-      queue.send(caseData.getTitle());
+      SimpleQueue queue = new SimpleQueue("users");
+      queue.send(userData.getLastname());
       queue.close();
 
-      return new ResponseEntity<>(_case, HttpStatus.CREATED);
+      return new ResponseEntity<>(_user, HttpStatus.CREATED);
     } catch (Exception e) {
       return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
-  @PutMapping("/cases/{id}")
-  public ResponseEntity<Case> updateCase(@PathVariable("id") long id, @RequestBody Case inputCase) {
-    Optional<Case> caseData = caseRepository.findById(id);
+  @PutMapping("/users/{id}")
+  public ResponseEntity<User> updateCase(@PathVariable("id") long id, @RequestBody User inputCase) {
+    Optional<User> userData = userRepository.findById(id);
 
-    if (caseData.isPresent()) {
-      Case _case = caseData.get();
-      _case.setTitle(inputCase.getTitle());
-      _case.setDescription(inputCase.getDescription());
-      _case.setPublished(inputCase.isPublished());
-      return new ResponseEntity<>(caseRepository.save(_case), HttpStatus.OK);
+    if (userData.isPresent()) {
+      User _user = userData.get();
+      _user.setFirstname(inputCase.getFirstname());
+      _user.setLastname(inputCase.getLastname());
+      _user.setInternal(inputCase.isInternal());
+      return new ResponseEntity<>(userRepository.save(_user), HttpStatus.OK);
     } else {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
   }
 
-  @DeleteMapping("/cases/{id}")
+  @DeleteMapping("/users/{id}")
   public ResponseEntity<HttpStatus> deleteCase(@PathVariable("id") long id) {
     try {
-      caseRepository.deleteById(id);
+      userRepository.deleteById(id);
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     } catch (Exception e) {
       return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
-  @DeleteMapping("/cases")
-  public ResponseEntity<HttpStatus> deleteAllCases() {
+  @DeleteMapping("/users")
+  public ResponseEntity<HttpStatus> deleteAllUsers() {
     try {
-      caseRepository.deleteAll();
+      userRepository.deleteAll();
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     } catch (Exception e) {
       return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -112,15 +112,15 @@ public class CaseController {
 
   }
 
-  @GetMapping("/cases/published")
-  public ResponseEntity<List<Case>> findByPublished() {
+  @GetMapping("/users/internal")
+  public ResponseEntity<List<User>> findByInternal() {
     try {
-      List<Case> cases = caseRepository.findByPublished(true);
+      List<User> users = userRepository.findByInternal(true);
 
-      if (cases.isEmpty()) {
+      if (users.isEmpty()) {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
       }
-      return new ResponseEntity<>(cases, HttpStatus.OK);
+      return new ResponseEntity<>(users, HttpStatus.OK);
     } catch (Exception e) {
       return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
