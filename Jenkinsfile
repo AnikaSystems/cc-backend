@@ -15,7 +15,7 @@ pipeline {
         stage('Build') { 
             steps { 
                 script{
-                 app = docker.build("cc-backend:${env.BUILD_NUMBER}")
+                 app = docker.build("cc-cases:${env.BUILD_NUMBER}")
                 }
             }
         }
@@ -55,7 +55,7 @@ pipeline {
             steps {
                 script {
                     echo "Run Trivy Image Scanner"
-                    sh "docker run --rm -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy image cc-backend:${env.BUILD_NUMBER}"
+                    sh "docker run --rm -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy image cc-cases:${env.BUILD_NUMBER}"
                 }
             }
         }
